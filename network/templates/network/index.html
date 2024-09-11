@@ -1,5 +1,15 @@
 {% extends "network/layout.html" %} {% block body %}
+    
 <div class="new-post container mt-3">
+    {% if messages %}
+        {% for message in messages %}
+            {% if message.level == DEFAULT_MESSAGE_LEVELS.ERROR %}
+                <div class="alert alert-danger" role="alert">{{ message }}</div>
+            {% else %}
+                <div class="alert alert-success" role="alert">{{ message }}</div>
+            {% endif %}
+        {% endfor %}
+    {% endif %}
   <form action="{% url 'post' %}" method="post">
     {% csrf_token %}
     <label for="post-input" class="form-label">New Post</label>
@@ -11,5 +21,15 @@
     ></textarea>
     <button type="submit" class="btn btn-primary mt-2">Post</button>
   </form>
+</div>
+<div class="all-posts container mt-3">
+  {% for post in posts %}
+    <div class="post">
+      <a class="bold" href="{% url 'profile' post.author.pk %}">{{ post.author }}</a>
+      <p>{{ post.content }}</p>
+      <p class="date">{{ post.date|date:"F j, Y, g:i a" }}</p>
+      <p>{{ post.likes }}</p>
+    </div>
+  {% endfor %}
 </div>
 {% endblock %}

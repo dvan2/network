@@ -1,0 +1,14 @@
+.post {
+  border: 1px solid #ddd;
+  border-radius: 5px;
+  padding: 10px;
+  margin-bottom: 10px;
+}
+
+.date {
+  font-weight: lighter;
+}
+
+.bold {
+  font-weight: bold;
+}

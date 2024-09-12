@@ -12,9 +12,9 @@ from .models import User, Post, Follow
 
 def index(request):
     posts = Post.objects.all().order_by('-date')
-    print(posts)
     return render(request, "network/index.html", {
-        'posts': posts
+        'posts': posts,
+        'prompt': True
     })
 
 
@@ -107,3 +107,15 @@ def follow(request, profile_id):
         else:
            messages.success(request, f'Followed {target_user}')
         return redirect(reverse('profile', kwargs={'profile_id': target_user.pk}))
+
+@login_required
+def following(request):
+    currently_following = request.user.currently_following.all()
+    followed_users = [follow.being_followed for follow in currently_following]
+
+    posts = Post.objects.filter(author__in=followed_users).order_by('-date')
+
+    return render(request, "network/index.html", {
+        'posts': posts,
+        'prompt': False
+    })

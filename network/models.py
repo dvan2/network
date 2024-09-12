@@ -3,8 +3,8 @@ from django.db import models
 
 
 class User(AbstractUser):
-    followers = models.PositiveIntegerField(default=0)
-    following = models.PositiveIntegerField(default=0)
+    def __str__(self):
+        return f'{self.username}'
 
 class Post(models.Model):
     content = models.TextField()

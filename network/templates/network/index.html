@@ -10,17 +10,19 @@
             {% endif %}
         {% endfor %}
     {% endif %}
-  <form action="{% url 'post' %}" method="post">
-    {% csrf_token %}
-    <label for="post-input" class="form-label">New Post</label>
-    <textarea
-      class="form-control"
-      rows="3"
-      id="post-input"
-      name="post-input"
-    ></textarea>
-    <button type="submit" class="btn btn-primary mt-2">Post</button>
-  </form>
+  {% if prompt %}
+    <form action="{% url 'post' %}" method="post">
+      {% csrf_token %}
+      <label for="post-input" class="form-label">New Post</label>
+      <textarea
+        class="form-control"
+        rows="3"
+        id="post-input"
+        name="post-input"
+      ></textarea>
+      <button type="submit" class="btn btn-primary mt-2">Post</button>
+    </form>
+  {% endif %}
 </div>
 <div class="all-posts container mt-3">
   {% for post in posts %}

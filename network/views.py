@@ -1,3 +1,5 @@
+import json
+
 from django.contrib.auth import authenticate, login, logout
 from django.db import IntegrityError
 from django.http import HttpResponse, HttpResponseRedirect
@@ -5,13 +7,25 @@ from django.shortcuts import render, redirect, get_object_or_404
 from django.urls import reverse
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
+from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 
+from django.views.decorators.csrf import csrf_exempt
+from django.http import JsonResponse
 
 from .models import User, Post, Follow
 
 
 def index(request):
     posts = Post.objects.all().order_by('-date')
+    paginator = Paginator(posts, 10)
+
+    page = request.GET.get('page')
+    try:
+        posts = paginator.page(page)
+    except PageNotAnInteger:
+        posts = paginator.page(1)
+    except EmptyPage:
+        posts = paginator.page(paginator.num_pages)
     return render(request, "network/index.html", {
         'posts': posts,
         'prompt': True
@@ -80,6 +94,27 @@ def post(request):
         messages.success(request, 'Post created')
         return redirect('index')
     return HttpResponseRedirect(reverse("index"))
+
+@login_required
+@csrf_exempt
+def edit(request, post_id):
+    if request.method=="PUT":
+        post = get_object_or_404(Post, id=post_id)
+        if post.author != request.user:
+            return JsonResponse({
+                "error": "Must be author of the post"
+            }, status=403)
+    
+        data = json.loads(request.body)
+        new_content = data.get("newcontent")
+        if new_content:
+            post.content = new_content
+            post.save()
+            return JsonResponse({'success': True})
+    else:
+        return JsonResponse({
+            "error": "Must be a PUT request"
+        })
 
 def profile(request, profile_id):
     posted_user = get_object_or_404(User, pk=profile_id)

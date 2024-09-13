@@ -12,3 +12,12 @@
 .bold {
   font-weight: bold;
 }
+
+.pagination-container {
+  display: flex;
+  justify-content: center;
+}
+
+.edit-link {
+  display: flex;
+}

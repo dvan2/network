@@ -5,7 +5,29 @@ document.addEventListener('DOMContentLoaded', function () {
       editPost(postId);
     });
   });
+
+  document.querySelectorAll('.button-like').forEach((btn) => {
+    btn.addEventListener('click', function () {
+      const postId = this.getAttribute('data-post-id');
+      likePost(postId);
+    });
+  });
 });
+
+function likePost(postId) {
+  console.log('Like', postId);
+  const likebtn = document.querySelector(`#like-btn-${postId}`);
+  likebtn.classList.toggle('liked');
+  fetch(`toggle_like/${postId}`, {
+    method: 'PUT',
+  })
+    .then((response) => response.json())
+    .then((data) => {
+      const likeCount = document.querySelector(`#like-count-${postId}`);
+      likeCount.innerHTML = data.likes;
+    })
+    .catch((error) => console.error('Error', error));
+}
 
 function editPost(postId) {
   console.log('Edit', postId);

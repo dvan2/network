@@ -31,7 +31,10 @@
       <p id="post-content-{{ post.id }}">{{ post.content }}</p>
       <button id="edit-btn-{{ post.id }}"class="btn btn-danger edit-link mt-2 mb-2" data-post-id="{{ post.id }}">Edit</button>
       <p class="date">{{ post.date|date:"F j, Y, g:i a" }}</p>
-      <p>{{ post.likes }}</p>
+      <div id="like-btn-{{ post.id }}" class="button-like {% if post.id in liked_posts %}liked{% endif %}" data-post-id="{{ post.id }}">
+        <i class="fa fa-heart"></i>
+      </div>
+      <p id="like-count-{{ post.id }}">{{ post.likes }}</p>
     </div>
   {% endfor %}
   <nav class="pagination-container navigation">

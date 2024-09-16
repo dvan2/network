@@ -93,7 +93,7 @@ class MultipleFollowing(TestCase):
         self.user2 = self.User.objects.create_user(username='user2', password='pass')
         self.user3 = self.User.objects.create_user(username='user3', password='pass')
 
-        Post.objects.create(author=self.user1, content="I'm User 1")
+        self.post1 = Post.objects.create(author=self.user1, content="I'm User 1")
         Post.objects.create(author=self.user2, content="I'm User 2")
         Post.objects.create(author=self.user3, content="I'm User 3")
 
@@ -117,6 +117,9 @@ class MultipleFollowing(TestCase):
         self.assertTrue(any(post.content == "I'm User 2" for post in posts))
         self.assertTrue(any(post.content == "I'm User 3" for post in posts))
         self.assertFalse(any(post.content == "I'm User 1" for post in posts))
+    
+    def test_like_post(self):
+        self.client.login(username='user2', password='pass')
 
 
 

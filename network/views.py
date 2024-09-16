@@ -12,7 +12,7 @@ from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from django.views.decorators.csrf import csrf_exempt
 from django.http import JsonResponse
 
-from .models import User, Post, Follow
+from .models import User, Post, Follow, Like
 
 
 def index(request):
@@ -26,8 +26,11 @@ def index(request):
         posts = paginator.page(1)
     except EmptyPage:
         posts = paginator.page(paginator.num_pages)
+    
+    liked_posts = Like.objects.filter(liked_by= request.user, liked_post__in=posts).values_list('liked_post_id', flat=True)
     return render(request, "network/index.html", {
         'posts': posts,
+        'liked_posts': liked_posts,
         'prompt': True
     })
 
@@ -132,6 +135,7 @@ def profile(request, profile_id):
         "following_count": following_count
     })
 
+@login_required
 def follow(request, profile_id):
     target_user = get_object_or_404(User, pk=profile_id)
     if request.method== "POST":
@@ -154,3 +158,27 @@ def following(request):
         'posts': posts,
         'prompt': False
     })
+
+@login_required
+@csrf_exempt
+def toggle_like(request, post_id):
+    if request.method == "PUT":
+        post = get_object_or_404(Post, pk=post_id)
+        user = request.user
+
+        like, created = Like.objects.get_or_create(liked_post=post, liked_by=user)
+        if created:
+            post.likes += 1
+            message = "Liked"
+        else:
+            like.delete()
+            post.likes -= 1
+            message = "Unliked"
+        post.save()
+        print(post)
+        return JsonResponse({
+            'message': message,
+            'likes': post.likes
+        })
+    return JsonResponse({'error': 'Invalid request method'}, status = 400)
+

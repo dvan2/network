@@ -15,10 +15,10 @@ document.addEventListener('DOMContentLoaded', function () {
 });
 
 function likePost(postId) {
-  console.log('Like', postId);
   const likebtn = document.querySelector(`#like-btn-${postId}`);
+  const url = likebtn.getAttribute('data-url');
   likebtn.classList.toggle('liked');
-  fetch(`toggle_like/${postId}`, {
+  fetch(url, {
     method: 'PUT',
   })
     .then((response) => response.json())

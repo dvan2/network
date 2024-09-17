@@ -1,20 +1,27 @@
 <div class="all-posts container mt-3">
-  {% for post in posts %}
-    <div class="post">
-      <a class="bold" href="{% url 'profile' post.author.pk %}">{{ post.author }}</a>
-      <p id="post-content-{{ post.id }}">{{ post.content }}</p>
-      
-      {% if post.author == request.user %}
-        <button id="edit-btn-{{ post.id }}" class="btn btn-danger edit-link mt-2 mb-2" data-post-id="{{ post.id }}">Edit</button>
-      {% endif %}
-      
-      <p class="date">{{ post.date|date:"F j, Y, g:i a" }}</p>
-      <div id="like-btn-{{ post.id }}" class="button-like {% if post.id in liked_posts %}liked{% endif %}" data-post-id="{{ post.id }}">
-        <i class="fa fa-heart"></i>
+  {% if posts %}
+    {% for post in posts %}
+      <div class="post">
+        <a class="bold" href="{% url 'profile' post.author.pk %}">{{ post.author }}</a>
+        <p id="post-content-{{ post.id }}">{{ post.content }}</p>
+        
+        {% if post.author == request.user %}
+          <button id="edit-btn-{{ post.id }}" class="btn btn-danger edit-link mt-2 mb-2" data-post-id="{{ post.id }}">Edit</button>
+        {% endif %}
+        
+        <p class="date">{{ post.date|date:"F j, Y, g:i a" }}</p>
+        <div id="like-btn-{{ post.id }}" 
+          class="button-like {% if post.id in liked_posts %}liked{% endif %}" 
+          data-post-id="{{ post.id }}"
+          data-url="{% url 'toggle_like' post.id %}">
+          <i class="fa fa-heart"></i>
+        </div>
+        <p id="like-count-{{ post.id }}">{{ post.likes }}</p>
       </div>
-      <p id="like-count-{{ post.id }}">{{ post.likes }}</p>
-    </div>
-  {% endfor %}
+    {% endfor %}
+  {% else %}
+    <p>No posts to show.</p>
+  {% endif %}
   
   <!-- Pagination -->
   <nav class="pagination-container navigation">

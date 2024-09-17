@@ -17,20 +17,8 @@ from .models import User, Post, Follow, Like
 
 def index(request):
     posts = Post.objects.all().order_by('-date')
-    paginator = Paginator(posts, 10)
-
-    page = request.GET.get('page')
-    try:
-        posts = paginator.page(page)
-    except PageNotAnInteger:
-        posts = paginator.page(1)
-    except EmptyPage:
-        posts = paginator.page(paginator.num_pages)
+    posts, liked_posts = create_posts(request, posts)
     
-    if request.user.is_authenticated:
-        liked_posts = Like.objects.filter(liked_by= request.user, liked_post__in=posts).values_list('liked_post_id', flat=True)
-    else:
-        liked_posts = []
     return render(request, "network/index.html", {
         'posts': posts,
         'liked_posts': liked_posts,
@@ -125,6 +113,7 @@ def edit(request, post_id):
 def profile(request, profile_id):
     posted_user = get_object_or_404(User, pk=profile_id)
     posts = Post.objects.filter(author=posted_user).order_by('-date')
+    posts, liked_posts = create_posts(request, posts)
 
     follower_count = posted_user.current_followers.count()
     following_count = posted_user.currently_following.count()
@@ -135,7 +124,8 @@ def profile(request, profile_id):
         "user_being_viewed": posted_user,
         "is_following": is_following,
         "follower_count": follower_count,
-        "following_count": following_count
+        "following_count": following_count,
+        "liked_posts": liked_posts
     })
 
 @login_required
@@ -156,10 +146,12 @@ def following(request):
     followed_users = [follow.being_followed for follow in currently_following]
 
     posts = Post.objects.filter(author__in=followed_users).order_by('-date')
+    posts, liked_posts = create_posts(request, posts)
 
     return render(request, "network/index.html", {
         'posts': posts,
-        'prompt': False
+        'prompt': False,
+        'liked_posts': liked_posts
     })
 
 @login_required
@@ -184,3 +176,22 @@ def toggle_like(request, post_id):
         })
     return JsonResponse({'error': 'Invalid request method'}, status = 400)
 
+def create_posts(request, posts):
+    """
+    Helper function to paginate and get liked posts by user
+    """
+    paginator = Paginator(posts, 10)
+
+    page = request.GET.get('page')
+    try:
+        posts = paginator.page(page)
+    except PageNotAnInteger:
+        posts = paginator.page(1)
+    except EmptyPage:
+        posts = paginator.page(paginator.num_pages)
+    
+    if request.user.is_authenticated:
+        liked_posts = Like.objects.filter(liked_by= request.user, liked_post__in=posts).values_list('liked_post_id', flat=True)
+    else:
+        liked_posts = []
+    return posts, liked_posts

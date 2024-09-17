@@ -24,38 +24,5 @@
     </form>
   {% endif %}
 </div>
-<div class="all-posts container mt-3">
-  {% for post in posts %}
-    <div class="post">
-      <a class="bold" href="{% url 'profile' post.author.pk %}">{{ post.author }}</a>
-      <p id="post-content-{{ post.id }}">{{ post.content }}</p>
-      <button id="edit-btn-{{ post.id }}"class="btn btn-danger edit-link mt-2 mb-2" data-post-id="{{ post.id }}">Edit</button>
-      <p class="date">{{ post.date|date:"F j, Y, g:i a" }}</p>
-      <div id="like-btn-{{ post.id }}" class="button-like {% if post.id in liked_posts %}liked{% endif %}" data-post-id="{{ post.id }}">
-        <i class="fa fa-heart"></i>
-      </div>
-      <p id="like-count-{{ post.id }}">{{ post.likes }}</p>
-    </div>
-  {% endfor %}
-  <nav class="pagination-container navigation">
-    <ul class='pagination'>
-      {% if posts.has_previous %}
-        <li class="page-item"></li>
-          <a class="page-link" href="?page=1">&laquo;</a>
-        </li>
-        <li class="page-item">
-          <a class="page-link" href="?page={{ posts.previous_page_number }}">previous</a>
-        </li>
-      {% endif %}
-      {% if posts.has_next %}
-        <li class="page-item"></li>
-          <a class="page-link" href="?page={{ posts.next_page_number }}">next</a>
-        </li>
-        <li class="page-item"></li>
-          <a class="page-link" href="?page={{ posts.paginator.num_pages }}">&raquo;</a>
-        </li>
-      {% endif %}
-    </ul>
-    </nav>
-</div>
+{% include 'network/posts.html' %}
 {% endblock %}

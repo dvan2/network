@@ -25,14 +25,7 @@
             {% endif %}
             </form>
     </div>
-    <div class="all-posts container mt-3">
-    {% for post in posts %}
-        <div class="post">
-        <p>{{ post.content }}</p>
-        <p class="date">{{ post.date|date:"F j, Y, g:i a" }}</p>
-        <p>{{ post.likes }}</p>
-        </div>
-    {% endfor %}
-    </div>
+    {% include 'network/posts.html' %}
+
 </div>
 {% endblock %}

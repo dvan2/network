@@ -9,11 +9,9 @@
       {% endif %}
       
       <p class="date">{{ post.date|date:"F j, Y, g:i a" }}</p>
-      
       <div id="like-btn-{{ post.id }}" class="button-like {% if post.id in liked_posts %}liked{% endif %}" data-post-id="{{ post.id }}">
         <i class="fa fa-heart"></i>
       </div>
-      
       <p id="like-count-{{ post.id }}">{{ post.likes }}</p>
     </div>
   {% endfor %}

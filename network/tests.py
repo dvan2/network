@@ -3,7 +3,7 @@ from django.test import TestCase
 
 from django.urls import reverse
 from django.contrib.auth import get_user_model
-from .models import Follow, Post
+from .models import Follow, Post, Like
 
 class ProfileTestCase(TestCase):
     def setUp(self):
@@ -120,6 +120,27 @@ class MultipleFollowing(TestCase):
     
     def test_like_post(self):
         self.client.login(username='user2', password='pass')
+
+        self.client.put(reverse('toggle_like', kwargs={'post_id': self.post1.pk}))
+        self.post1.refresh_from_db()
+
+        self.assertEqual(self.post1.likes,1)
+
+        # Log in user3
+        self.client.logout()
+        self.client.login(username='user3', password='pass')
+        self.client.put(reverse('toggle_like', kwargs={'post_id': self.post1.pk}))
+        self.post1.refresh_from_db()
+        self.assertEqual(self.post1.likes,2)
+
+        # Unlike by user3
+        self.client.put(reverse('toggle_like', kwargs={'post_id': self.post1.pk}))
+        self.post1.refresh_from_db()
+        self.assertEqual(self.post1.likes,1)
+
+
+    
+
 
 
 

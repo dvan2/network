@@ -27,7 +27,10 @@ def index(request):
     except EmptyPage:
         posts = paginator.page(paginator.num_pages)
     
-    liked_posts = Like.objects.filter(liked_by= request.user, liked_post__in=posts).values_list('liked_post_id', flat=True)
+    if request.user.is_authenticated:
+        liked_posts = Like.objects.filter(liked_by= request.user, liked_post__in=posts).values_list('liked_post_id', flat=True)
+    else:
+        liked_posts = []
     return render(request, "network/index.html", {
         'posts': posts,
         'liked_posts': liked_posts,
@@ -175,7 +178,6 @@ def toggle_like(request, post_id):
             post.likes -= 1
             message = "Unliked"
         post.save()
-        print(post)
         return JsonResponse({
             'message': message,
             'likes': post.likes

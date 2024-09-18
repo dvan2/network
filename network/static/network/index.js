@@ -6,6 +6,13 @@ document.addEventListener('DOMContentLoaded', function () {
     });
   });
 
+  document.querySelectorAll('.delete-link').forEach((btn) => {
+    btn.addEventListener('click', function () {
+      const postId = this.getAttribute('data-post-id');
+      deletePost(postId);
+    });
+  });
+
   document.querySelectorAll('.button-like').forEach((btn) => {
     btn.addEventListener('click', function () {
       const postId = this.getAttribute('data-post-id');
@@ -29,8 +36,11 @@ function likePost(postId) {
     .catch((error) => console.error('Error', error));
 }
 
+function deletePost(postId) {
+  console.log('Delete', postId);
+}
+
 function editPost(postId) {
-  console.log('Edit', postId);
   const contentElem = document.querySelector(`#post-content-${postId}`);
 
   const newText = document.createElement('textarea');
@@ -38,15 +48,12 @@ function editPost(postId) {
   newText.innerHTML = contentElem.innerHTML;
   contentElem.replaceWith(newText);
 
-  const saveButton = document.createElement('button');
-  saveButton.className = 'btn btn-success mt-2';
-  saveButton.innerHTML = 'Save';
-  const editBtnElem = document.querySelector(`#edit-btn-${postId}`);
-  editBtnElem.replaceWith(saveButton);
+  const saveButton = document.querySelector(`#save-btn-${postId}`);
+  saveButton.style.display = 'block';
 
   saveButton.onclick = function () {
-    saveButton.replaceWith(editBtnElem);
-    fetch(`edit/${postId}`, {
+    const url = saveButton.getAttribute('data-url');
+    fetch(url, {
       method: 'PUT',
       body: JSON.stringify({
         newcontent: newText.value,
@@ -56,12 +63,17 @@ function editPost(postId) {
         const newTextContentElement = document.createElement('p');
         newTextContentElement.id = `post-content-${postId}`;
         if (!response.ok) {
-          newTextContentElement.innerHTML = contentElem.innerHTML;
-          newText.replaceWith(newTextContentElement);
-          alert('You must be owner of the post to edit');
+          if (response.status == 403) {
+            newTextContentElement.innerHTML = contentElem.innerHTML;
+            newText.replaceWith(newTextContentElement);
+            alert('You must be owner of the post to edit');
+          } else {
+            alert('An error occured while trying to save the post');
+          }
         } else {
           newTextContentElement.innerHTML = newText.value;
           newText.replaceWith(newTextContentElement);
+          saveButton.style.display = 'none';
         }
       })
       .catch((error) => console.error('Error', error));

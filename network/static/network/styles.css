@@ -18,18 +18,26 @@
   justify-content: center;
 }
 
+<<<<<<< HEAD
 .edit-link {
   display: flex;
+=======
+.save-btn {
+  display: none;
+>>>>>>> 5f248c4 (added ellipsis)
 }
 
 .button-like {
   cursor: pointer;
+<<<<<<< HEAD
   /* border: none; */
   /* background-color: transparent; */
   /* text-decoration: none; */
   /* position: relative; */
   /* vertical-align: middle; */
   /* text-align: center; */
+=======
+>>>>>>> 5f248c4 (added ellipsis)
   display: inline-block;
   color: #8a8a8a;
   transition: all ease 0.4s;
@@ -39,6 +47,7 @@
   transition: all ease 0.4s;
 }
 
+<<<<<<< HEAD
 /* .button-like:focus {
   background-color: transparent;
 } */
@@ -47,15 +56,20 @@
   color: #8a8a8a;
 } */
 
+=======
+>>>>>>> 5f248c4 (added ellipsis)
 .button-like:hover .fa {
   color: #cc4b37;
 }
 
+<<<<<<< HEAD
 /* .liked {
   background-color: #cc4b37;
   border-color: #cc4b37;
 } */
 
+=======
+>>>>>>> 5f248c4 (added ellipsis)
 .liked .fa {
   color: #cc4b37;
 }
@@ -64,6 +78,7 @@
   background-color: #cc4b37;
 }
 
+<<<<<<< HEAD
 /* .liked:focus .fa {
   color: #fefefe;
 } */
@@ -76,3 +91,18 @@
 /* .liked:hover .fa {
   color: #8a8a8a;
 } */
+=======
+.top {
+  display: flex;
+  justify-content: space-between;
+}
+
+#menu {
+  color: #8a8a8a;
+  cursor: pointer;
+}
+
+#name-title {
+  display: block;
+}
+>>>>>>> 5f248c4 (added ellipsis)

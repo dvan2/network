@@ -178,7 +178,11 @@ def toggle_like(request, post_id):
 
 def create_posts(request, posts):
     """
+<<<<<<< HEAD
     Helper function to paginate and get liked posts by user
+=======
+    Helper function to paginate posts and get liked posts by user
+>>>>>>> 5f248c4 (added ellipsis)
     """
     paginator = Paginator(posts, 10)
 

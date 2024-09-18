@@ -9,6 +9,7 @@ from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 
+from django.views.decorators.http import require_http_methods
 from django.views.decorators.csrf import csrf_exempt
 from django.http import JsonResponse
 
@@ -178,11 +179,7 @@ def toggle_like(request, post_id):
 
 def create_posts(request, posts):
     """
-<<<<<<< HEAD
-    Helper function to paginate and get liked posts by user
-=======
     Helper function to paginate posts and get liked posts by user
->>>>>>> 5f248c4 (added ellipsis)
     """
     paginator = Paginator(posts, 10)
 
@@ -199,3 +196,17 @@ def create_posts(request, posts):
     else:
         liked_posts = []
     return posts, liked_posts
+
+@login_required
+@csrf_exempt
+@require_http_methods(["DELETE"])
+def delete_post(request, post_id):
+    post = get_object_or_404(Post, id=post_id)
+    if post.author != request.user:
+        return JsonResponse({
+            'error': "Must be author to delete"
+        },status=403)
+    else:
+        post.delete()
+        return JsonResponse({'success': f'Post {post_id} deleted'})
+

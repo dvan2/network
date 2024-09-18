@@ -38,6 +38,13 @@ function likePost(postId) {
 
 function deletePost(postId) {
   console.log('Delete', postId);
+  fetch(`/delete_post/${postId}`, {
+    method: 'DELETE',
+  }).then((response) => {
+    if (response.ok) {
+      console.log('Post deleted');
+    }
+  });
 }
 
 function editPost(postId) {

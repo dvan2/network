@@ -27,6 +27,7 @@ def index(request):
     })
 
 
+@csrf_exempt
 def login_view(request):
     if request.method == "POST":
 
@@ -114,12 +115,16 @@ def edit(request, post_id):
 def profile(request, profile_id):
     posted_user = get_object_or_404(User, pk=profile_id)
     posts = Post.objects.filter(author=posted_user).order_by('-date')
-    posts, liked_posts = create_posts(request, posts)
+    if request.user.is_authenticated:
+        posts, liked_posts = create_posts(request, posts)
 
+        is_following = Follow.objects.filter(followed_by= request.user, being_followed=posted_user).exists()
+    else:
+        liked_posts = []
+        is_following = False
     follower_count = posted_user.current_followers.count()
     following_count = posted_user.currently_following.count()
 
-    is_following = Follow.objects.filter(followed_by= request.user, being_followed=posted_user).exists()
     return render(request, "network/profile.html", {
         "posts": posts,
         "user_being_viewed": posted_user,

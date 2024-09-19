@@ -9,6 +9,8 @@ document.addEventListener('DOMContentLoaded', function () {
   document.querySelectorAll('.delete-link').forEach((btn) => {
     btn.addEventListener('click', function () {
       const postId = this.getAttribute('data-post-id');
+      const post = document.querySelector(`#post-${postId}`);
+      post.style.animationPlayState = 'running';
       deletePost(postId);
     });
   });
@@ -24,20 +26,27 @@ document.addEventListener('DOMContentLoaded', function () {
 function likePost(postId) {
   const likebtn = document.querySelector(`#like-btn-${postId}`);
   const url = likebtn.getAttribute('data-url');
-  likebtn.classList.toggle('liked');
   fetch(url, {
     method: 'PUT',
   })
-    .then((response) => response.json())
+    .then((response) => {
+      if (response.redirected) {
+        window.location.href = response.url;
+      } else {
+        return response.json();
+      }
+    })
     .then((data) => {
-      const likeCount = document.querySelector(`#like-count-${postId}`);
-      likeCount.innerHTML = data.likes;
+      if (data) {
+        likebtn.classList.toggle('liked');
+        const likeCount = document.querySelector(`#like-count-${postId}`);
+        likeCount.innerHTML = data.likes;
+      }
     })
     .catch((error) => console.error('Error', error));
 }
 
 function deletePost(postId) {
-  console.log('Delete', postId);
   fetch(`/delete_post/${postId}`, {
     method: 'DELETE',
   }).then((response) => {
@@ -69,6 +78,7 @@ function editPost(postId) {
       .then((response) => {
         const newTextContentElement = document.createElement('p');
         newTextContentElement.id = `post-content-${postId}`;
+        newTextContentElement.className = 'mt-3';
         if (!response.ok) {
           if (response.status == 403) {
             newTextContentElement.innerHTML = contentElem.innerHTML;

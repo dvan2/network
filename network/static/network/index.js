@@ -7,13 +7,28 @@ document.addEventListener('DOMContentLoaded', function () {
   });
 
   document.querySelectorAll('.delete-link').forEach((btn) => {
-    btn.addEventListener('click', function () {
+    btn.addEventListener('click', function (event) {
+      event.preventDefault();
+      const postId = this.getAttribute('data-post-id');
+
+      const confirmDeleteBtn = document.querySelector('#confirm-delete-btn');
+      confirmDeleteBtn.setAttribute('data-post-id', postId);
+
+      const deleteModal = new bootstrap.Modal(
+        document.getElementById('deleteModal')
+      );
+      deleteModal.show();
+    });
+  });
+
+  document
+    .querySelector('#confirm-delete-btn')
+    .addEventListener('click', function () {
       const postId = this.getAttribute('data-post-id');
       const post = document.querySelector(`#post-${postId}`);
       post.style.animationPlayState = 'running';
       deletePost(postId);
     });
-  });
 
   document.querySelectorAll('.button-like').forEach((btn) => {
     btn.addEventListener('click', function () {

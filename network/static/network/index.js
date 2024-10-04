@@ -36,7 +36,18 @@ document.addEventListener('DOMContentLoaded', function () {
       likePost(postId);
     });
   });
+
+  document.querySelectorAll('.button-comment').forEach((btn) => {
+    btn.addEventListener('click', function () {
+      const postId = this.getAttribute('data-post-id');
+      openPost(postId);
+    });
+  });
 });
+
+function openPost(postId) {
+  console.log(postId);
+}
 
 function likePost(postId) {
   const likebtn = document.querySelector(`#like-btn-${postId}`);

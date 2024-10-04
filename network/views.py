@@ -215,3 +215,10 @@ def delete_post(request, post_id):
         post.delete()
         return JsonResponse({'success': f'Post {post_id} deleted'})
 
+def open_post(request, post_id):
+    print("Open")
+    print(post_id)
+    post = get_object_or_404(Post, id=post_id)
+    return render(request, "network/open_post.html", {
+        "post": post
+    })

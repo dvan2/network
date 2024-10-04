@@ -3,11 +3,19 @@
   border-radius: 5px;
   padding: 10px;
   margin-bottom: 10px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+  background-color: #fff;
+  transition: all 0.3s ease;
+
   animation-name: hide;
   animation-duration: 2s;
   animation-fill-mode: forwards;
   animation-play-state: paused;
   overflow: hidden;
+}
+
+.post-hover {
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
 }
 
 @keyframes hide {
@@ -45,6 +53,13 @@
 
 .bold {
   font-weight: bold;
+  text-decoration: none;
+}
+
+.post-interact {
+  display: flex;
+  border-top: 1px solid #eee;
+  padding-top: 10px;
 }
 
 .pagination-container {
@@ -56,15 +71,17 @@
   display: none;
 }
 
-.button-like {
+.button-like,
+.button-comment {
   cursor: pointer;
   display: inline-block;
   color: #8a8a8a;
   transition: all ease 0.4s;
 }
 
-.button-like .fa {
+.fa {
   transition: all ease 0.4s;
+  margin-right: 5px;
 }
 
 .button-like:hover .fa {

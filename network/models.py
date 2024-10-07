@@ -19,3 +19,9 @@ class Follow(models.Model):
 class Like(models.Model):
     liked_by = models.ForeignKey(User, related_name='liked_posts', on_delete=models.CASCADE)
     liked_post = models.ForeignKey(Post, related_name='liked_by', on_delete=models.CASCADE)
+
+class Comment(models.Model):
+    comment_content = models.TextField()
+    post = models.ForeignKey(Post, related_name='post_comments', on_delete=models.CASCADE)
+    commenter = models.ForeignKey(User, related_name='user_comments', on_delete=models.CASCADE)
+    comment_date = models.DateTimeField(auto_now_add=True)

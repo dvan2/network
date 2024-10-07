@@ -109,3 +109,7 @@
 #name-title {
   display: block;
 }
+
+.page-link {
+  text-decoration: none;
+}

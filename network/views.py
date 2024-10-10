@@ -218,9 +218,13 @@ def delete_post(request, post_id):
 def open_post(request, post_id):
     post = get_object_or_404(Post, id=post_id)
     comments = post.post_comments.all()
+
+    liked_posts = {}
+    liked_posts[post.id] = Like.objects.filter(liked_post=post, liked_by=request.user).exists()
     return render(request, "network/open_post.html", {
         "post": post,
-        "comments": comments
+        "comments": comments,
+        "liked_posts": liked_posts
     })
 
 @csrf_exempt

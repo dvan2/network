@@ -22,7 +22,7 @@
     data-url="{% url 'edit' post.id %}">Save</button>
   <p class="date">{{ post.date|date:"F j, Y, g:i a" }}</p>
   <div class="post-interact">
-    <div class="like-post">
+    <div class="interactions">
       <div id="like-btn-{{ post.id }}"
           class="button-like {% if post.id in liked_posts %}liked{% endif %}"
           data-post-id="{{ post.id }}"
@@ -32,13 +32,13 @@
       <p id="like-count-{{ post.id }}">{{ post.likes }}</p>
     </div>
     <a href="{% url 'open_post' post.id %}" class="page-link">
-      <div class="comment-post">
+      <div class="comment-post interactions">
         <div id="comment-btn-{{ post.id }}" class="button-comment"
           data-post-id="{{ post.id }}"
         >
           <i class="fa fa-comment"></i>
         </div>
-        <p id="like-count-{{ post.id }}">{{ post.likes }}</p>
+        <p id="like-count-{{ post.id }}">{{ post.comments_count }}</p>
       </div>
     </a>
   </div>

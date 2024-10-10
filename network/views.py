@@ -13,7 +13,7 @@ from django.views.decorators.http import require_http_methods
 from django.views.decorators.csrf import csrf_exempt
 from django.http import JsonResponse
 
-from .models import User, Post, Follow, Like
+from .models import User, Post, Follow, Like, Comment
 
 
 def index(request):
@@ -216,9 +216,26 @@ def delete_post(request, post_id):
         return JsonResponse({'success': f'Post {post_id} deleted'})
 
 def open_post(request, post_id):
-    print("Open")
-    print(post_id)
     post = get_object_or_404(Post, id=post_id)
+    comments = post.post_comments.all()
     return render(request, "network/open_post.html", {
-        "post": post
+        "post": post,
+        "comments": comments
     })
+
+@csrf_exempt
+@login_required
+def comment(request, post_id):
+    comment_content = request.POST.get("comment")
+    post = get_object_or_404(Post, id=post_id)
+
+    Comment.objects.create(
+        comment_content= comment_content,
+        post = post,
+        commenter= request.user,
+    )
+
+    post.comments_count += 1
+    post.save()
+
+    return redirect(reverse('open_post', kwargs={'post_id': post_id}))

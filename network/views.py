@@ -220,7 +220,8 @@ def open_post(request, post_id):
     comments = post.post_comments.all()
 
     liked_posts = {}
-    liked_posts[post.id] = Like.objects.filter(liked_post=post, liked_by=request.user).exists()
+    if request.user.is_authenticated:
+        liked_posts[post.id] = Like.objects.filter(liked_post=post, liked_by=request.user).exists()
     return render(request, "network/open_post.html", {
         "post": post,
         "comments": comments,
